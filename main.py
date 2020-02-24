@@ -17,11 +17,13 @@ def adr_com(x):
     x_bin = bin(int(x, 16))
     x_bin = x_bin[2:len(x_bin)]
     # Анализ адресации
+    m = 'error'
     if x_bin[4] == '0':
         # Прямая абсолютная адресация
-        print()
+        # В мнемонику записываем адрес
+        m = x[1:4]
 
-    print(a_kop.get(x[0]), end='')
+    print(a_kop.get(x[0]) % m, end='')
 
 
 def bez_adr_com(x):
