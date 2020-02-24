@@ -1,5 +1,5 @@
-# v1.0
 # готово к 3 лабе по ОПД
+
 
 def hex_to_binary(hex):
     # Костыль. Я устал.
@@ -26,6 +26,7 @@ def hex_to_binary(hex):
         hex_list[i] = d.get(hex_list[i])
     binary = ''.join(hex_list)
     return binary
+
 
 def binary_to_signed_16(x):
     # говнокод
@@ -59,7 +60,7 @@ def adr_com(x):
         'D': ('CALL %s', 'Вызов подпрограммы'),
         'E': ('ST %s', 'Сохранение'),
     }
-    x_bin =hex_to_binary(x)
+    x_bin = hex_to_binary(x)
     # Анализ адресации
     m = 'error'
     info = ''
@@ -146,15 +147,22 @@ def vet_com(x):
         'F9': ('BGE %s ', 'Переход, если больше или равно'),
         'CE': ('BR %s ', 'Безусловный переход (эквивалент JUMP D)'),
     }
-    temp = v.get(x[0:2])
-    return (temp[0] % x[2:4], temp[1])
+    x_bin = hex_to_binary(x)
+    offset = binary_to_signed_16(x_bin[8:16])
+    if offset[0] != '-':
+        m = 'IP+%s' % offset
+    else:
+        m = 'IP%s' % offset
+
+    temp = v.get(x[0:2]) 
+    return (temp[0] % m, temp[1])
+
 
 
 with open('input.txt', 'r', encoding='utf-8') as input:
     for c in input:
         c = c.replace('\n', '')
-        output_line = c + '|';
-        # print(c, '| ', end='')
+        output_line = c + '|'
         if c[0] == "0":
             output_line += "{0[0]:<15} | {0[1]:<20}".format(bez_adr_com(c))
         elif c[0] == "F" or c[0:2] == "CE":
