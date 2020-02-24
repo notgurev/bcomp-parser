@@ -23,8 +23,21 @@ def bez_adr_com(x):
     print(b.get(x), end='')
 
 
-def vet_com():
-    print('v', end='')
+def vet_com(x):
+    v = {
+        'F0': 'BEQ D | Переход, если равенство',
+        'F1': 'BNE D | Переход, если неравенство',
+        'F2': 'BMI D | Переход, если минус',
+        'F3': 'BPL D | Переход, если плюс',
+        'F4': 'BLO/BCS D | Переход, если ниже/перенос',
+        'F5': 'BHIS/BCC D | Переход, если выше/нет переноса',
+        'F6': 'BVS D | Переход, если переполнение',
+        'F7': 'BVC D | Переход, если нет переполнения',
+        'F8': 'BLT D | Переход, если меньше',
+        'F9': 'BGE D | Переход, если больше или равно',
+        'CE': 'BR D | Безусловный переход (эквивалент JUMP D)',
+    }
+    print(v.get(x[0:2]), end='')
 
 
 with open('input.txt', 'r', encoding='utf-8') as input:
@@ -33,8 +46,8 @@ with open('input.txt', 'r', encoding='utf-8') as input:
         print(c, '| ', end='')
         if c[0] == "0":
             bez_adr_com(c)
-        elif c[0] == "F":
-            vet_com()
+        elif c[0] == "F" or c[0:2] == "CE":
+            vet_com(c)
         elif c[0] == "1":
             print("Команды ввода-вывода не поддерживаются!")
             exit()
