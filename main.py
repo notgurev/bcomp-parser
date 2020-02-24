@@ -1,14 +1,43 @@
-input_file = open('input.txt', 'r')
-output_file = open('output.txt', 'w')
-
 def adr_com():
-    print()
+    print('a', end='')
 
-def bez_adr_com():
-    print()
+
+def bez_adr_com(x):
+    b = {
+        '0000': 'NOP | Нет операции',
+        '0100': 'HLT | Останов',
+        '0200': 'CLA | Очистка аккумулятора',
+        '0280': 'NOT | Инверсия аккумулятора',
+        '0300': 'CLC | Очистка рег. переноса',
+        '0380': 'CMC | Инверсия рег. переноса',
+        '0400': 'ROL | Циклический сдвиг влево',
+        '0480': 'ROR | Циклический сдвиг вправо',
+        '0500': 'ASL | Арифметический сдвиг влево',
+        '0580': 'ASR | Арифметический сдвиг вправо',
+        '0600': 'SXTB | Расширение знака байта',
+        '0680': 'SWAB | Обмен ст. и мл. байтов',
+        '0700': 'INC | Инкремент',
+        '0740': 'DEC | Декремент',
+        '0780': 'NEG | Изменение знака'
+    }
+    print(b.get(x), end='')
+
 
 def vet_com():
-    print()
+    print('v', end='')
 
-with input_file as s:
-    for line in s:
+
+with open('input.txt', 'r', encoding='utf-8') as input:
+    for c in input:
+        c = c.replace('\n', '')
+        print(c, '| ', end='')
+        if c[0] == "0":
+            bez_adr_com(c)
+        elif c[0] == "F":
+            vet_com()
+        elif c[0] == "1":
+            print("Команды ввода-вывода не поддерживаются!")
+            exit()
+        else:
+            adr_com()
+        print()
