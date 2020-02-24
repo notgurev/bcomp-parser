@@ -3,7 +3,6 @@ def binary_to_signed_10(x):
         return int(x, 2)
     else:
         x = list(x)
-        print(x)
         for i in range(0, len(x)):
             if x[i] == '1':
                 x[i] = '0'
@@ -46,10 +45,16 @@ def adr_com(x):
             info = '(Непосредственная загрузка операнда)'
             # В мнемонику записываем операнд
             m = x[2:4]
-        else:
-            # Относительная адресация
-            mode = x_bin[5:8] # режим адресации
-            #if
+        elif x[1] == 'E':
+            # Прямая относительная адресация (записываем в info)
+            info = '(Прямая относительная адресация)'
+            # В мнемонику записываем смещение
+            offset = binary_to_signed_10(x_bin[8:16])
+            if offset > 0:
+                m = 'IP+%u' % offset
+            else:
+                m = 'IP%u' % offset
+
 
     print(a_kop.get(x[0]) % m, info, end='')
 
@@ -105,6 +110,3 @@ with open('input.txt', 'r', encoding='utf-8') as input:
         else:
             adr_com(c)
         print()
-
-print()
-print(binary_to_signed_10('011'))
