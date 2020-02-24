@@ -44,7 +44,7 @@ def adr_com(x):
             # Непосредственная загрузка операнда (записываем в info)
             info = '(Непосредственная загрузка операнда)'
             # В мнемонику записываем операнд
-            m = x[2:4]
+            m = '#0x' + x[2:4]
         else:
             mode = x_bin[5:8]
             offset = binary_to_signed_10(x_bin[8:16])
@@ -77,7 +77,6 @@ def adr_com(x):
                     m = '(IP+%u)-' % offset
                 else:
                     m = '(IP%u)-' % offset
-
 
     print(a_kop.get(x[0]) % m, info, end='')
 
