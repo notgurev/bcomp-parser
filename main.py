@@ -1,6 +1,7 @@
-def binary_to_signed_10(x):
+def binary_to_signed_16(x):
+    # говнокод
     if x[0] == '0':
-        return int(x, 2)
+        return hex(int(x, 2)).lstrip('0x').capitalize()
     else:
         x = list(x)
         for i in range(0, len(x)):
@@ -9,8 +10,8 @@ def binary_to_signed_10(x):
             else:
                 x[i] = '1'
         x = ''.join(x)
-        x = int(x, 2) + 1
-        return -x
+        x = hex(int(x, 2)+1).lstrip('0x').capitalize()
+        return '-'+x
 
 
 def adr_com(x):
@@ -47,36 +48,36 @@ def adr_com(x):
             m = '#0x' + x[2:4]
         else:
             mode = x_bin[5:8]
-            offset = binary_to_signed_10(x_bin[8:16])
+            offset = binary_to_signed_16(x_bin[8:16])
             if mode == '110':
                 # Прямая относительная адресация (записываем в info)
                 info = '(Прямая относительная адресация)'
                 # В мнемонику записываем смещение
-                if offset > 0:
-                    m = 'IP+%u' % offset
+                if offset[0] != '-': #этот ужас надо как-то убрать
+                    m = 'IP+%s' % offset
                 else:
-                    m = 'IP%u' % offset
+                    m = 'IP%s' % offset
             elif mode == '000':
                 # Косвенная относительная адресация (записываем в info)
                 info = '(Косвенная относительная адресация)'
-                if offset > 0:
-                    m = '(IP+%u)' % offset
+                if offset[0] != '-':
+                    m = '(IP+%s)' % offset
                 else:
-                    m = '(IP%u)' % offset
+                    m = '(IP%s)' % offset
             elif mode == '010':
                 # Косвенная относительная автоинкрементная адресация (записываем в info)
                 info = '(Косвенная относительная автоинкрементная адресация)'
-                if offset > 0:
-                    m = '(IP+%u)+' % offset
+                if offset[0] != '-':
+                    m = '(IP+%s)+' % offset
                 else:
-                    m = '(IP%u)+' % offset
+                    m = '(IP%s)+' % offset
             elif mode == '011':
                 # Косвенная относительная автодекрементная адресация (записываем в info)
                 info = '(Косвенная относительная автодекрементная адресация)'
-                if offset > 0:
-                    m = '(IP+%u)-' % offset
+                if offset[0] != '-':
+                    m = '(IP+%s)-' % offset
                 else:
-                    m = '(IP%u)-' % offset
+                    m = '(IP%s)-' % offset
 
     print(a_kop.get(x[0]) % m, info, end='')
 
