@@ -1,3 +1,19 @@
+def binary_to_signed_10(x):
+    if x[0] == '0':
+        return int(x, 2)
+    else:
+        x = list(x)
+        print(x)
+        for i in range(0, len(x)):
+            if x[i] == '1':
+                x[i] = '0'
+            else:
+                x[i] = '1'
+        x = ''.join(x)
+        x = int(x, 2) + 1
+        return -x
+
+
 def adr_com(x):
     a_kop = {
         '2': ' AND %s | Логическое умножение',
@@ -23,15 +39,17 @@ def adr_com(x):
         # Прямая абсолютная адресация
         # В мнемонику записываем адрес
         info = '(Прямая абсолютная адресация)'
-        m = x[1:4]
+        m = '0x' + x[1:4].lstrip('0')
     if x_bin[4] == '1':
-        mode = x_bin[5:8]
         if x[1] == 'F':
             # Непосредственная загрузка операнда (записываем в info)
             info = '(Непосредственная загрузка операнда)'
             # В мнемонику записываем операнд
             m = x[2:4]
-        #else:
+        else:
+            # Относительная адресация
+            mode = x_bin[5:8] # режим адресации
+            #if
 
     print(a_kop.get(x[0]) % m, info, end='')
 
@@ -87,3 +105,6 @@ with open('input.txt', 'r', encoding='utf-8') as input:
         else:
             adr_com(c)
         print()
+
+print()
+print(binary_to_signed_10('011'))
