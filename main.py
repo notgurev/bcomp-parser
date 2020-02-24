@@ -162,7 +162,7 @@ def vet_com(x):
 with open('input.txt', 'r', encoding='utf-8') as input:
     for c in input:
         c = c.replace('\n', '')
-        output_line = c + '|'
+        output_line = c + '| '
         if c[0] == "0":
             output_line += "{0[0]:<15} | {0[1]:<20}".format(bez_adr_com(c))
         elif c[0] == "F" or c[0:2] == "CE":
