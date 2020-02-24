@@ -1,3 +1,29 @@
+def hex_to_binary(hex):
+    # Костыль. Я устал.
+    d = {
+        '0': '0000',
+        '1': '0001',
+        '2': '0010',
+        '3': '0011',
+        '4': '0100',
+        '5': '0101',
+        '6': '0110',
+        '7': '0111',
+        '8': '1000',
+        '9': '1001',
+        'A': '1010',
+        'B': '1011',
+        'C': '1100',
+        'D': '1101',
+        'E': '1110',
+        'F': '1111',
+    }
+    hex_list = list(hex)
+    for i in range(0, len(hex_list)):
+        hex_list[i] = d.get(hex_list[i])
+    binary = ''.join(hex_list)
+    return binary
+
 def binary_to_signed_16(x):
     # говнокод
     if x[0] == '0':
@@ -30,8 +56,7 @@ def adr_com(x):
         'D': 'CALL %s | Вызов подпрограммы',
         'E': '  ST %s | Сохранение',
     }
-    x_bin = bin(int(x, 16))
-    x_bin = x_bin.replace('b', '')
+    x_bin =hex_to_binary(x)
     # Анализ адресации
     m = 'error'
     info = ''
@@ -132,4 +157,4 @@ with open('input.txt', 'r', encoding='utf-8') as input:
             print("Команды ввода-вывода не поддерживаются!")
         else:
             adr_com(c)
-        print()
+        print('->', bin(int(c, 16)).replace('b',''), end='\n\n\n')
