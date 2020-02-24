@@ -31,7 +31,7 @@ def adr_com(x):
         'E': '  ST %s | Сохранение',
     }
     x_bin = bin(int(x, 16))
-    x_bin = x_bin[2:len(x_bin)]
+    x_bin = x_bin.replace('b', '')
     # Анализ адресации
     m = 'error'
     info = ''
