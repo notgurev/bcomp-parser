@@ -1,29 +1,14 @@
 # готово к 3 лабе по ОПД
 
 
-def hex_to_binary(hex):
-    # Костыль. Я устал.
-    d = {
-        '0': '0000',
-        '1': '0001',
-        '2': '0010',
-        '3': '0011',
-        '4': '0100',
-        '5': '0101',
-        '6': '0110',
-        '7': '0111',
-        '8': '1000',
-        '9': '1001',
-        'A': '1010',
-        'B': '1011',
-        'C': '1100',
-        'D': '1101',
-        'E': '1110',
-        'F': '1111',
-    }
-    hex_list = list(hex)
+def hex_to_binary(s):
+    hex_list = list(s)
     for i in range(0, len(hex_list)):
-        hex_list[i] = d.get(hex_list[i])
+        #hex_list[i] = d.get(hex_list[i])
+        temp = bin(int(hex_list[i], 16)).split('b')[1]
+        while (len(temp) < 4):
+            temp = '0' + temp
+        hex_list[i] = temp
     binary = ''.join(hex_list)
     return binary
 
