@@ -92,6 +92,13 @@ def adr_com(x):
                     m = '(IP+%s)-' % offset
                 else:
                     m = '(IP%s)-' % offset
+            elif mode == '100':
+                # Косвенная относительная со смещением (SP)
+                info = '(Косвенная относительная со смещением (SP))'
+                if offset[0] != '-':
+                    m = 'SP+%s' % offset
+                else:
+                    m = 'SP%s' % offset
 
     temp = a_kop.get(x[0])
     return (temp[0] % m, temp[1], info)
