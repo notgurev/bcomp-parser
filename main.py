@@ -154,6 +154,21 @@ def vet_com(x):
     return temp[0] % m, temp[1]
 
 
+def parse_code_to_line(code):
+    try:
+        if code[0] == "0":  # безадресная
+            return "{0[0]:<15} | {0[1]}".format(bez_adr_com(code))
+        elif code[0] == "F" or code[0:2] == "CE":  # ветвление
+            return "{0[0]:<15} | {0[1]}".format(vet_com(code))
+        elif code[0] == "1":  # ввода-вывода
+            return "Команды ввода-вывода не поддерживаются!"
+        elif ("2" <= code[0] <= "9") or ("A" <= code[0] <= "E"):  # адресная
+            return "{0[0]:<15} | {0[1]}".format(adr_com(code))
+        else:
+            return "Переменная/ошибка"
+    except:
+        return "Константа/ошибка"
+
 print("""
 Будьте внимательны: парсер обрабатывает ВСЕ коды как команды, 
 кроме тех, что он не может расшифровать (тогда он пишет, что это переменная или константа).
@@ -170,19 +185,4 @@ with open('input.txt', 'r', encoding='utf-8') as lines:
         if len(c) != 4:  # не обрабатываем строки с длиной != 4
             print(c)
             continue
-        output_line = c + ' | '
-        try:
-            if c[0] == "0":  # безадресная
-                output_line += "{0[0]:<15} | {0[1]}".format(bez_adr_com(c))
-            elif c[0] == "F" or c[0:2] == "CE":  # ветвление
-                output_line += "{0[0]:<15} | {0[1]}".format(vet_com(c))
-            elif c[0] == "1":  # ввода-вывода
-                output_line += "Команды ввода-вывода не поддерживаются!"
-            elif ("2" <= c[0] <= "9") or ("A" <= c[0] <= "E"):  # адресная
-                output_line += "{0[0]:<15} | {0[1]}".format(adr_com(c))
-            else:
-                output_line += "Переменная/ошибка"
-        except:
-            output_line += "Константа/ошибка"
-
-        print(output_line, end='\n')
+        print(c + ' | ' + parse_code_to_line(c))
