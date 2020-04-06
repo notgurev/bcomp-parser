@@ -1,4 +1,6 @@
 import time
+import sys
+
 
 def hex_to_binary(s):
     hex_list = list(s)
@@ -64,7 +66,7 @@ def adr_com(x):
                 # Прямая относительная адресация (записываем в info)
                 info = '(Прямая относительная адресация)'
                 # В мнемонику записываем смещение
-                if offset[0] != '-': #этот ужас надо как-то убрать
+                if offset[0] != '-':
                     m = 'IP+%s' % offset
                 else:
                     m = 'IP%s' % offset
@@ -169,15 +171,23 @@ def parse_code_to_line(code):
     except:
         return "Константа/ошибка"
 
-print("""
+
+# Аргументы
+show_disclaimer = True
+
+for arg in sys.argv:
+    if arg == '-nodisc': show_disclaimer = False
+
+if show_disclaimer:
+    print("""
 Будьте внимательны: парсер обрабатывает ВСЕ коды как команды, 
 кроме тех, что он не может расшифровать (тогда он пишет, что это переменная или константа).
 Однако некоторые коды на самом деле являются константами. Их нужно определять вручную.
 (или пофиксить это и кинуть pull request на github.com/notgurev/bcomp-parser)
 
 Напоминаю: парсер сделан только для ПРОВЕРКИ вашего решения. Не стоит на него полагаться.
-""")
-#time.sleep(2)
+    """)
+    time.sleep(3)
 
 with open('input.txt', 'r', encoding='utf-8') as lines:
     for c in lines:
