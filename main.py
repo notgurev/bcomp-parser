@@ -144,11 +144,11 @@ def parse_code_to_line(code):
 
 # Аргументы
 show_disclaimer = True
-import_to_csv = False
+export_to_csv = False
 
 for arg in sys.argv:
     if arg == '-nodisc': show_disclaimer = False
-    if arg == '-csv': import_to_csv = True
+    if arg == '-csv': export_to_csv = True
 
 if show_disclaimer:
     print("""
@@ -169,12 +169,12 @@ with open('input.txt', 'r', encoding='utf-8') as lines:
         if len(c) != 4:  # не обрабатываем строки с длиной != 4
             print(c)
             continue
-        if import_to_csv:
+        if export_to_csv:
             data.append(c + ' | ' + parse_code_to_line(c))
         print(c + ' | ' + parse_code_to_line(c))
 
 
-if import_to_csv:
+if export_to_csv:
     with open('result_csv.csv', mode='w', newline='') as csv_file:
         fieldnames = ['Код команды', 'Мнемоника', 'Информация']
         csv_writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
