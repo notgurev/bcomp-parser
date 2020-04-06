@@ -180,4 +180,7 @@ if import_to_csv:
         csv_writer.writeheader()
         for row in data:
             splitted = [x.strip() for x in row.split('|')]
+            if len(splitted) == 2 and 'ошибка' in splitted[1]:
+                splitted.append(splitted[1])
+                splitted[1] = ""
             csv_writer.writerow({'Код команды': splitted[0], 'Мнемоника': splitted[1], 'Информация': splitted[2]})
