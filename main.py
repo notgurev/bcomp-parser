@@ -1,10 +1,10 @@
 # готово к 3 лабе по ОПД
-
+import time
 
 def hex_to_binary(s):
     hex_list = list(s)
     for i in range(0, len(hex_list)):
-        #hex_list[i] = d.get(hex_list[i])
+        # hex_list[i] = d.get(hex_list[i])
         temp = bin(int(hex_list[i], 16)).split('b')[1]
         while (len(temp) < 4):
             temp = '0' + temp
@@ -26,7 +26,7 @@ def binary_to_signed_16(x):
                 x[i] = '1'
         x = ''.join(x)
         x = hex(int(x, 2)+1).lstrip('0x').capitalize()
-        return '-'+x
+        return '-'+x.capitalize()
 
 
 def adr_com(x):
@@ -94,14 +94,14 @@ def adr_com(x):
                     m = '(IP%s)-' % offset
             elif mode == '100':
                 # Косвенная относительная со смещением (SP)
-                info = '(Косвенная относительная со смещением (SP))'
+                info = '(Косвенная относительная со смещением)'
                 if offset[0] != '-':
                     m = '(SP+%s)' % offset
                 else:
                     m = '(SP%s)' % offset
 
     temp = a_kop.get(x[0])
-    return (temp[0] % m, temp[1], info)
+    return temp[0] % m, temp[1], info
 
 
 def bez_adr_com(x):
@@ -144,7 +144,7 @@ def vet_com(x):
         'F7': ('BVC %s ', 'Переход, если нет переполнения'),
         'F8': ('BLT %s ', 'Переход, если меньше'),
         'F9': ('BGE %s ', 'Переход, если больше или равно'),
-        'CE': ('BR %s ', 'Безусловный переход (эквивалент JUMP D)'),
+        'CE': ('BR %s ', 'Безусловный переход (эквивалент JUMP c прямой относительной адресацией)'),
     }
     x_bin = hex_to_binary(x)
     offset = binary_to_signed_16(x_bin[8:16])
@@ -154,20 +154,38 @@ def vet_com(x):
         m = 'IP%s' % offset
 
     temp = v.get(x[0:2]) 
-    return (temp[0] % m, temp[1])
+    return temp[0] % m, temp[1]
 
 
+print("""
+Будьте внимательны: парсер обрабатывает ВСЕ коды как команды, 
+кроме тех, что он не может расшифровать (тогда он пишет, что это переменная или константа).
+Однако некоторые коды на самом деле являются константами. Их нужно определять вручную.
+(или пофиксить это и кинуть pull request на github.com/notgurev/bcomp-parser)
 
-with open('input.txt', 'r', encoding='utf-8') as input:
-    for c in input:
-        c = c.replace('\n', '')
-        output_line = c + '| '
-        if c[0] == "0":
-            output_line += "{0[0]:<15} | {0[1]:<20}".format(bez_adr_com(c))
-        elif c[0] == "F" or c[0:2] == "CE":
-            output_line += "{0[0]:<15} | {0[1]:<20}".format(vet_com(c))
-        elif c[0] == "1":
-            print("Команды ввода-вывода не поддерживаются!")
-        else:
-            output_line += "{0[0]:<15} | {0[1]:<20} | {0[2]: <20}".format(adr_com(c))
+Напоминаю: парсер сделан только для ПРОВЕРКИ вашего решения. Не стоит на него полагаться.
+""")
+time.sleep(2)
+
+with open('input.txt', 'r', encoding='utf-8') as lines:
+    for c in lines:
+        c = c.replace('\n', '').replace('+', '').strip()
+        if len(c) != 4:  # не обрабатываем строки с длиной != 4
+            print(c)
+            continue
+        output_line = c + ' | '
+        try:
+            if c[0] == "0":  # безадресная
+                output_line += "{0[0]:<15} | {0[1]:<20}".format(bez_adr_com(c))
+            elif c[0] == "F" or c[0:2] == "CE":  # ветвление
+                output_line += "{0[0]:<15} | {0[1]:<20}".format(vet_com(c))
+            elif c[0] == "1":  # ввода-вывода
+                output_line += "Команды ввода-вывода не поддерживаются!"
+            elif ("2" <= c[0] <= "9") or ("A" <= c[0] <= "E"):  # адресная
+                output_line += "{0[0]:<15} | {0[1]:<20} | {0[2]: <20}".format(adr_com(c))
+            else:
+                output_line += "Переменная/ошибка"
+        except:
+            output_line += "Константа/ошибка"
+
         print(output_line, end='\n')
