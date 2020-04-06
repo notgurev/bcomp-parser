@@ -16,7 +16,7 @@ def hex_to_binary(s):
 def binary_to_signed_16(x):
     # говнокод
     if x[0] == '0':
-        return hex(int(x, 2)).lstrip('0x').capitalize()
+        return hex(int(x, 2)).lstrip('0x')
     else:
         x = list(x)
         for i in range(0, len(x)):
@@ -25,8 +25,8 @@ def binary_to_signed_16(x):
             else:
                 x[i] = '1'
         x = ''.join(x)
-        x = hex(int(x, 2)+1).lstrip('0x').capitalize()
-        return '-'+x.capitalize()
+        x = hex(int(x, 2)+1).lstrip('0x')
+        return '-'+x.upper()
 
 
 def adr_com(x):
@@ -62,7 +62,7 @@ def adr_com(x):
             m = '#0x' + x[2:4]
         else:
             mode = x_bin[5:8]
-            offset = binary_to_signed_16(x_bin[8:16])
+            offset = binary_to_signed_16(x_bin[8:16]).upper()
             if mode == '110':
                 # Прямая относительная адресация (записываем в info)
                 info = '(Прямая относительная адресация)'
@@ -147,7 +147,7 @@ def vet_com(x):
         'CE': ('BR %s ', 'Безусловный переход (эквивалент JUMP c прямой относительной адресацией)'),
     }
     x_bin = hex_to_binary(x)
-    offset = binary_to_signed_16(x_bin[8:16])
+    offset = binary_to_signed_16(x_bin[8:16]).upper()
     if offset[0] != '-':
         m = 'IP+%s' % offset
     else:
@@ -165,7 +165,7 @@ print("""
 
 Напоминаю: парсер сделан только для ПРОВЕРКИ вашего решения. Не стоит на него полагаться.
 """)
-time.sleep(2)
+#time.sleep(2)
 
 with open('input.txt', 'r', encoding='utf-8') as lines:
     for c in lines:
