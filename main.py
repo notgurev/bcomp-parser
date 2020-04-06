@@ -144,11 +144,11 @@ def parse_code_to_line(code):
 
 # Аргументы
 show_disclaimer = True
-import_to_csv = True
+import_to_csv = False
 
 for arg in sys.argv:
     if arg == '-nodisc': show_disclaimer = False
-    if arg == '-nocsv': import_to_csv = False
+    if arg == '-csv': import_to_csv = True
 
 if show_disclaimer:
     print("""
@@ -179,5 +179,5 @@ if import_to_csv:
         csv_writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
         csv_writer.writeheader()
         for row in data:
-            splitted = row.split('|')
+            splitted = [x.strip() for x in row.split('|')]
             csv_writer.writerow({'Код команды': splitted[0], 'Мнемоника': splitted[1], 'Информация': splitted[2]})
