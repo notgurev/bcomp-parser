@@ -50,7 +50,7 @@ def adr_com(x):
         info = '(Прямая абсолютная адресация)'
         # В мнемонику записываем адрес
         m = '0x' + x[1:4].lstrip('0')
-    if x_bin[4] == '1':
+    elif x_bin[4] == '1':
         if x[1] == 'F':
             info = '(Прямая загрузка операнда)'
             # В мнемонику записываем операнд
@@ -119,24 +119,23 @@ def vet_com(x):
     x_bin = hex_to_binary(x)
     offset = binary_to_signed_16(x_bin[8:16]).upper()
     if offset[0] != '-':
-        m = 'IP+%s' % offset
-    else:
-        m = 'IP%s' % offset
-
+        offset = '+' + offset
+    m = 'IP%s' % offset
     temp = v.get(x[0:2]) 
     return temp[0] % m, temp[1]
 
 
 def parse_code_to_line(code):
+    template = "{0[0]:<15} | {0[1]}"
     try:
         if code[0] == "0":  # безадресная
-            return "{0[0]:<15} | {0[1]}".format(bez_adr_com(code))
+            return template.format(bez_adr_com(code))
         elif code[0] == "F" or code[0:2] == "CE":  # ветвление
-            return "{0[0]:<15} | {0[1]}".format(vet_com(code))
+            return template.format(vet_com(code))
         elif code[0] == "1":  # ввода-вывода
             return "Команды ввода-вывода не поддерживаются!"
         elif ("2" <= code[0] <= "9") or ("A" <= code[0] <= "E"):  # адресная
-            return "{0[0]:<15} | {0[1]}".format(adr_com(code))
+            return template.format(adr_com(code))
         else:
             return "Переменная/ошибка"
     except:
