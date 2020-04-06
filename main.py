@@ -161,26 +161,27 @@ if show_disclaimer:
     """)
     time.sleep(3)
 
-data = []
 
 with open('input.txt', 'r', encoding='utf-8') as lines:
+    data = []
     for c in lines:
         c = c.replace('\n', '').replace('+', '').strip()
         if len(c) != 4:  # не обрабатываем строки с длиной != 4
             print(c)
             continue
-        data.append(c + ' | ' + parse_code_to_line(c))
+        if import_to_csv:
+            data.append(c + ' | ' + parse_code_to_line(c))
         print(c + ' | ' + parse_code_to_line(c))
 
 
 if import_to_csv:
-    with open('result_csv.csv', mode='w') as csv_file:
+    with open('result_csv.csv', mode='w', newline='') as csv_file:
         fieldnames = ['Код команды', 'Мнемоника', 'Информация']
         csv_writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
         csv_writer.writeheader()
         for row in data:
             splitted = [x.strip() for x in row.split('|')]
-            if len(splitted) == 2 and 'ошибка' in splitted[1]:
+            if len(splitted) == 2 and 'ошибка' in splitted[1]:  # костыль
                 splitted.append(splitted[1])
                 splitted[1] = ""
             csv_writer.writerow({'Код команды': splitted[0], 'Мнемоника': splitted[1], 'Информация': splitted[2]})
