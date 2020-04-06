@@ -1,6 +1,6 @@
-import time
 import sys
-
+import time
+import csv
 
 def hex_to_binary(s):
     hex_list = list(s)
@@ -144,9 +144,11 @@ def parse_code_to_line(code):
 
 # Аргументы
 show_disclaimer = True
+import_to_csv = True
 
 for arg in sys.argv:
     if arg == '-nodisc': show_disclaimer = False
+    if arg == '-nocsv': import_to_csv = False
 
 if show_disclaimer:
     print("""
@@ -159,10 +161,23 @@ if show_disclaimer:
     """)
     time.sleep(3)
 
+data = []
+
 with open('input.txt', 'r', encoding='utf-8') as lines:
     for c in lines:
         c = c.replace('\n', '').replace('+', '').strip()
         if len(c) != 4:  # не обрабатываем строки с длиной != 4
             print(c)
             continue
+        data.append(c + ' | ' + parse_code_to_line(c))
         print(c + ' | ' + parse_code_to_line(c))
+
+
+if import_to_csv:
+    with open('result_csv.csv', mode='w') as csv_file:
+        fieldnames = ['Код команды', 'Мнемоника', 'Информация']
+        csv_writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
+        csv_writer.writeheader()
+        for row in data:
+            splitted = row.split('|')
+            csv_writer.writerow({'Код команды': splitted[0], 'Мнемоника': splitted[1], 'Информация': splitted[2]})
