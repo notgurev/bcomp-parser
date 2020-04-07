@@ -172,10 +172,12 @@ with open('input.txt', 'r', encoding='utf-8') as lines:
         if export_to_csv:
             data.append(c + ' | ' + parse_code_to_line(c))
         print(c + ' | ' + parse_code_to_line(c))
+    if export_to_csv:
+        print('\nЭкспортировано в result.csv')
 
 
 if export_to_csv:
-    with open('result_csv.csv', mode='w', newline='') as csv_file:
+    with open('result.csv', mode='w', newline='', encoding='utf-8') as csv_file:
         fieldnames = ['Код команды', 'Мнемоника', 'Информация']
         csv_writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
         csv_writer.writeheader()
